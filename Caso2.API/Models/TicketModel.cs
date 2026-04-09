@@ -4,7 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Caso2.API.Models.Tickets
 {
-    public enum Status{ Abierto,Cerrado, EnProceso }
+    public enum Status
+    {
+        Abierto = 0,
+        EnProceso = 1,
+        Cerrado = 2
+    }
     public class TicketModel
     {
         [Key]

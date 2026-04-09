@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Caso2.Models
+﻿namespace Caso2.Models
 {
     public class UserModel
     {
-        [Required] public int Id { get; set; }
-        [Required][MaxLength(25)] public string Nombre { get; set; }
-        [Required][MaxLength(50)] public string Apellidos { get; set; }
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Apellidos { get; set; }
     }
 }

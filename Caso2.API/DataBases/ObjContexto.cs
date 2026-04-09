@@ -9,7 +9,7 @@ namespace Caso2.API.DataBases
         public ObjContexto(DbContextOptions<ObjContexto> opts) : base(opts) { }
 
         public DbSet<TicketModel> Ticket { get; set; } = null!;
-        public DbSet<UserModel> User { get; set; } = null!;
+        public DbSet<UserModel> Users { get; set; } = null!;
 
 
         //keys 

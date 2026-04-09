@@ -1,0 +1,20 @@
+﻿@model Caso2.Models.UserModel
+
+<form id="createUserForm" asp-action="CreateUser" asp-controller="Users" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Apellidos" class="form-label"></label>
+        <input asp-for="Apellidos" class="form-control" required />
+    </div>
+
+  
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Crear</button>
+    </div>
+</form>

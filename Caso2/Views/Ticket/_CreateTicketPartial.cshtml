@@ -1,0 +1,32 @@
+﻿@model Caso2.Models.TicketViewModel
+
+<form id="createTicketForm" asp-action="CreateTicket" asp-controller="Ticket" method="post">
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input name="Nombre" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea name="Descripcion" class="form-control" rows="3" required></textarea>
+        
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        <select name="UserId" class="form-control" required>
+            <option value="">Seleccione un usuario</option>
+            @foreach (var user in (SelectList)ViewBag.Users)
+            {
+                <option value="@user.Value">@user.Text</option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Dificultad (1-10)</label>
+        <input type="number" name="Dificultad" class="form-control" min="1" max="10" value="1" />
+    </div>
+    <input type="hidden" name="Estado" value="0" />
+    <div class="modal-footer px-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success">Crear</button>
+    </div>
+</form>

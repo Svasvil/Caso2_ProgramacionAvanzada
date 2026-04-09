@@ -15,15 +15,15 @@ namespace Caso2.API.DataAccess_Repository_.Logics.Users
 
         public async Task CrearUsuario(UserModel user)
         {
-            _context.User.Add(user);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
 
         public async Task<List<UserModel>> GetUsuarios() =>
-           await _context.User.AsNoTracking().ToListAsync();
+           await _context.Users.AsNoTracking().ToListAsync();
 
 
         public async Task<UserModel?> GetUsuario_ID(int id) =>
-            await _context.User.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
     }
 }

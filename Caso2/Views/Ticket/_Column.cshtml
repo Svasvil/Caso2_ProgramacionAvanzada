@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Caso2.Models.TicketViewModel>
+
+@{
+    var columnName = ViewData["ColumnName"] as string;
+    var colorClass = ViewData["ColorClass"] as string;
+}
+
+<div class="column @colorClass text-white p-3 rounded" style="width:300px; min-height:500px;">
+    <h5 class="text-center">@columnName</h5>
+
+    @foreach (var t in Model)
+    {
+        <div class="card text-dark mb-2 p-2 shadow-sm">
+            <h6>@t.Nombre</h6>
+            <p>@t.Descripcion</p>
+            <small><b>Dificultad:</b> @t.Dificultad</small><br />
+            <small><b>Prioridad:</b> @t.Prioridad</small>
+
+    
+            @if (t.Estado != Caso2.Models.TicketViewModel.EstadoTicket.Cerrado)
+            {
+                <form asp-action="NextTicket" method="post">
+                    <input type="hidden" name="id" value="@t.Id" />
+                    <button type="submit" class="btn btn-sm btn-dark mt-2 w-100">
+                        Avanzar
+                    </button>
+                </form>
+            }
+        </div>
+    }
+</div>

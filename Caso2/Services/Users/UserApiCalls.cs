@@ -25,12 +25,7 @@ namespace Caso2.PrograAvanzada.Services.Users
 
         public async Task CreateUserAsync(string Nombre, string Apellidos, CancellationToken cancellation = default)
         {
-            var nuevoUsuario = new
-            {
-                Nombre = Nombre,
-                Apellidos = Apellidos
-            };
-
+            var nuevoUsuario = new { Nombre, Apellidos };
             await _Conexion.PostAsJsonAsync("api/Users", nuevoUsuario, cancellation);
         }
     }

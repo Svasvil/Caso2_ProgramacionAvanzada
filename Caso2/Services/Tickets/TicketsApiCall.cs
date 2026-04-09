@@ -11,7 +11,7 @@ namespace Caso2.PrograAvanzada.Services
 
         public TicketApiCall(HttpClient conexion) => _Conexion = conexion;
 
-        public async Task<List<TicketModel>> GetAllAsync(CancellationToken canc = default)
+        public async Task<List<TicketViewModel>> GetAllAsync(CancellationToken canc = default)
         {
             var options = new JsonSerializerOptions
             {
@@ -19,16 +19,16 @@ namespace Caso2.PrograAvanzada.Services
                 Converters = { new JsonStringEnumConverter() }
             };
 
-            return await _Conexion.GetFromJsonAsync<List<TicketModel>>("api/Ticket", options, canc)
-                   ?? new List<TicketModel>();
+            return await _Conexion.GetFromJsonAsync<List<TicketViewModel>>("api/Ticket", options, canc)
+                   ?? new List<TicketViewModel>();
         }
 
-        public async Task<TicketModel> CreateTicketAsync(string Nombre, string Descripcion, int userId, int dificultad, CancellationToken cancellation = default)
+        public async Task<TicketViewModel> CreateTicketAsync(string Nombre, string Descripcion, int userId, int dificultad, CancellationToken cancellation = default)
         {
             var response = await _Conexion.PostAsJsonAsync("api/Ticket", new
             {
-                Nombre = Nombre,
-                Descripcion = Descripcion,
+                Nombre,
+                Descripcion,
                 UserId = userId,
                 Dificultad = dificultad
             }, cancellation);
@@ -41,8 +41,8 @@ namespace Caso2.PrograAvanzada.Services
                 Converters = { new JsonStringEnumConverter() }
             };
 
-            var resultado = await response.Content.ReadFromJsonAsync<TicketModel>(options, cancellation);
-            return resultado ?? new TicketModel();
+            var resultado = await response.Content.ReadFromJsonAsync<TicketViewModel>(options, cancellation);
+            return resultado ?? new TicketViewModel();
         }
 
         public async Task NextTicketAsync(int id, CancellationToken cancellation = default)

@@ -1,4 +1,5 @@
-﻿using Caso2.PrograAvanzada.Services.Users;
+﻿using Caso2.PrograAvanzada.Services;
+using Caso2.PrograAvanzada.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Caso2.PrograAvanzada.Controllers
@@ -28,17 +29,17 @@ namespace Caso2.PrograAvanzada.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTicket(string Nombre, string Descripcion, int UserId, CancellationToken cancellation)
+        public async Task<IActionResult> CreateTicket(string Nombre, string Descripcion,
+            int UserId, int Dificultad, CancellationToken cancellation)
         {
             if (string.IsNullOrWhiteSpace(Nombre) || string.IsNullOrWhiteSpace(Descripcion))
                 return BadRequest("Campos Requeridos");
 
-            var ticketCreado = await _theCall.CreateTicketAsync(Nombre, Descripcion, UserId, 0, cancellation);
+            var ticketCreado = await _theCall.CreateTicketAsync(
+                Nombre, Descripcion, UserId, Dificultad, cancellation);
 
             if (ticketCreado.Dificultad > 7)
-            {
-                TempData["AltaDificultad"] = $"El ticket '{Nombre}' tiene una estimación alta: {ticketCreado.Dificultad}";
-            }
+                TempData["AltaDificultad"] = $"El ticket '{Nombre}' tiene estimación alta: {ticketCreado.Dificultad}";
 
             return RedirectToAction(nameof(Index));
         }
