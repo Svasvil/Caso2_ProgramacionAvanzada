@@ -25,8 +25,8 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
 
             try
             {
-                var response = await http.PostAsJsonAsync("https://localhost:5285/api/prioridad",
-                    new { Descripcion = dto.Descripcion });
+                var response = await http.PostAsJsonAsync("http://localhost:5088/api/prioridad",
+                 new { Descripcion = dto.Descripcion });
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -39,7 +39,6 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
                 }
                 else
                 {
-                    // Ver qué error retorna el MinimalAPI
                     var error = await response.Content.ReadAsStringAsync();
                     Console.WriteLine($"Error MinimalAPI: {response.StatusCode} - {error}");
                 }

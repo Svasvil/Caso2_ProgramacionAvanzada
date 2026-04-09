@@ -5,16 +5,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// HttpClient + Services
 builder.Services.AddHttpClient<I_TicketApiCall, TicketApiCall>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7275/"); // puerto de tu API
+    client.BaseAddress = new Uri("http://localhost:5200/");
 });
-
 builder.Services.AddHttpClient<I_UserApiCall, UserApiCall>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7275/"); // puerto de tu API
+    client.BaseAddress = new Uri("http://localhost:5200/");
 });
+
 
 var app = builder.Build();
 
