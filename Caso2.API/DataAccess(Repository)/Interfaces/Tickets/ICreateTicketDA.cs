@@ -7,7 +7,7 @@ namespace Caso2.API.DataAccess_Repository_.Interfaces.Tickets
         //methods 
             Task<List<TicketModel>> ObtenerTickets();
         Task<TicketModel?> ObtenerTicket_ID(int id);
-        Task CrearTicket (TicketModel task);
+        Task<TicketModel> CrearTicket(TicketModel task);
         Task UpdateTicket(TicketModel task);
 
     }

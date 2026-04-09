@@ -9,6 +9,8 @@ namespace Caso2.API.DTos.Tickets
         Status Estado,
         int UserId,
         string? AsignadoA,
-        int Dificultad
+        int Dificultad,
+        string? Prioridad  
     );
+
 }

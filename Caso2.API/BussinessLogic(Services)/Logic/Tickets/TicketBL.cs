@@ -2,10 +2,13 @@
 using Caso2.API.DataAccess_Repository_.Interfaces.Tickets;
 using Caso2.API.DTos.Tickets;
 using Caso2.API.Models.Tickets;
-using System.Linq;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
 {
+    public record PriorityResult(string Descripcion, string Prioridad);
+
     public class TicketBL : I_TicketBL
     {
         private readonly ICreateTicketDA _createTicketDA;
@@ -17,22 +20,46 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
 
         public async Task<TicketDTO> CreateTicket(TicketDTO dto)
         {
+            using var http = new HttpClient();
+            string prioridad = "Media";
+
+            try
+            {
+                var response = await http.PostAsJsonAsync("https://localhost:5285/api/prioridad",
+                    new { Descripcion = dto.Descripcion });
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+                    var result = await response.Content.ReadFromJsonAsync<PriorityResult>(options);
+                    prioridad = result?.Prioridad ?? "Media";
+                }
+                else
+                {
+                    // Ver qué error retorna el MinimalAPI
+                    var error = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error MinimalAPI: {response.StatusCode} - {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Excepción llamando MinimalAPI: {ex.Message}");
+            }
+
             var ticketModel = new TicketModel
             {
-                Id = dto.Id,
                 Nombre = dto.Nombre,
                 Descripcion = dto.Descripcion,
                 Estado = dto.Estado,
                 UserId = dto.UserId,
-                Dificultad = dto.Dificultad
+                Dificultad = dto.Dificultad,
+                Prioridad = prioridad
             };
 
-            await _createTicketDA.CrearTicket(ticketModel);
-
-            var newTicket = await _createTicketDA.ObtenerTicket_ID(ticketModel.Id);
-
-            if (newTicket == null)
-                throw new InvalidOperationException("Ticket creation failed.");
+            var newTicket = await _createTicketDA.CrearTicket(ticketModel);
 
             return new TicketDTO(
                 newTicket.Id,
@@ -41,9 +68,11 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
                 newTicket.Estado,
                 newTicket.UserId,
                 newTicket.AsignadoA?.Nombre,
-                newTicket.Dificultad
+                newTicket.Dificultad,
+                newTicket.Prioridad
             );
         }
+
         public async Task<bool> AdvanceStateAsync(int id)
         {
             var ticket = await _createTicketDA.ObtenerTicket_ID(id);
@@ -51,9 +80,8 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
 
             switch (ticket.Estado)
             {
-                case Status.Abierto: ticket.Estado = Status.Abierto; break;
-                case Status.Cerrado: ticket.Estado = Status.Cerrado; break;
-                case Status.EnProceso: ticket.Estado = Status.EnProceso; break;
+                case Status.Abierto: ticket.Estado = Status.EnProceso; break;
+                case Status.EnProceso: ticket.Estado = Status.Cerrado; break;
                 default: return false;
             }
 
@@ -71,7 +99,8 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
                 t.Estado,
                 t.UserId,
                 t.AsignadoA != null ? $"{t.AsignadoA.Nombre} {t.AsignadoA.Apellidos}" : null,
-                t.Dificultad
+                t.Dificultad,
+                t.Prioridad  
             )).ToList();
         }
 
@@ -85,7 +114,8 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
                 t.Estado,
                 t.UserId,
                 t.AsignadoA != null ? $"{t.AsignadoA.Nombre} {t.AsignadoA.Apellidos}" : null,
-                t.Dificultad
+                t.Dificultad,
+                t.Prioridad
             );
         }
     }

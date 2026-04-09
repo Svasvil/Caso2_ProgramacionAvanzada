@@ -10,6 +10,7 @@ namespace Caso2.API.DTos.Tickets
          string Descripcion,
          Status Estado,      
          int UserId,
-         int Dificultad
+         int Dificultad,
+        string? Prioridad
     );
 }

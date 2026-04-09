@@ -21,11 +21,12 @@ namespace Caso2.API.DataAccess_Repository_.Logics.Tickets
 
 
         //create 
-        public async Task CrearTicket(TicketModel task) { 
+        public async Task<TicketModel> CrearTicket(TicketModel task)
+        {
             _context.Ticket.Add(task);
             await _context.SaveChangesAsync();
+            return task; 
         }
-
 
         //update
         public async Task UpdateTicket(TicketModel task)
