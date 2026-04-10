@@ -21,7 +21,7 @@ namespace Caso2.API.Models.Tickets
         public int UserId { get; set; }
         public UserModel? AsignadoA { get; set; }
         public int Dificultad { get; set; }
-        public string Prioridad { get; set; } = "Media";
+        public string Prioridad { get; set; } 
 
     }
 }

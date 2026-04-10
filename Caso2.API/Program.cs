@@ -12,26 +12,16 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
-// 🔥 DB CONTEXT
 builder.Services.AddDbContext<ObjContexto>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-// 🔥 DEPENDENCIAS - TICKETS
 builder.Services.AddScoped<I_TicketBL, TicketBL>();
 builder.Services.AddScoped<ICreateTicketDA, CreateTicketDA>();
 
-
-// 🔥 DEPENDENCIAS - USERS
 builder.Services.AddScoped<I_UsersBL, UsersBL>();
 builder.Services.AddScoped<ICreateUserDA, CreateUserDA>();
-
-
-// 🔥 CONTROLADORES
 builder.Services.AddControllers();
 
-
-// 🔥 SWAGGER
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -39,7 +29,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 
-// 🔥 MIDDLEWARE
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

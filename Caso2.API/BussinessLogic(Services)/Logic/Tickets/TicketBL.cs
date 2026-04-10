@@ -18,59 +18,34 @@ namespace Caso2.API.BussinessLogic_Services_.Logic.Tickets
             _createTicketDA = ticket;
         }
 
-        public async Task<TicketDTO> CreateTicket(TicketDTO dto)
-        {
-            using var http = new HttpClient();
-            string prioridad = "Media";
+   public async Task<TicketDTO> CreateTicket(CreateTicketDTO model) 
+{
+  
+    
+    var ticketModel = new TicketModel
+    {
+        Nombre = model.Nombre,
+        Descripcion = model.Descripcion,
+        Estado = model.Estado,
+        UserId = model.UserId,
+        Dificultad = model.Dificultad,
+        
+        Prioridad = !string.IsNullOrEmpty(model.Prioridad) ? model.Prioridad : "Media"
+    };
 
-            try
-            {
-                var response = await http.PostAsJsonAsync("http://localhost:5088/api/prioridad",
-                 new { Descripcion = dto.Descripcion });
+    var newTicket = await _createTicketDA.CrearTicket(ticketModel);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var options = new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    };
-                    var result = await response.Content.ReadFromJsonAsync<PriorityResult>(options);
-                    prioridad = result?.Prioridad ?? "Media";
-                }
-                else
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Error MinimalAPI: {response.StatusCode} - {error}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Excepción llamando MinimalAPI: {ex.Message}");
-            }
-
-            var ticketModel = new TicketModel
-            {
-                Nombre = dto.Nombre,
-                Descripcion = dto.Descripcion,
-                Estado = dto.Estado,
-                UserId = dto.UserId,
-                Dificultad = dto.Dificultad,
-                Prioridad = prioridad
-            };
-
-            var newTicket = await _createTicketDA.CrearTicket(ticketModel);
-
-            return new TicketDTO(
-                newTicket.Id,
-                newTicket.Nombre,
-                newTicket.Descripcion,
-                newTicket.Estado,
-                newTicket.UserId,
-                newTicket.AsignadoA?.Nombre,
-                newTicket.Dificultad,
-                newTicket.Prioridad
-            );
-        }
+    return new TicketDTO(
+        newTicket.Id,
+        newTicket.Nombre,
+        newTicket.Descripcion,
+        newTicket.Estado,
+        newTicket.UserId,
+        newTicket.AsignadoA?.Nombre,
+        newTicket.Dificultad,
+        newTicket.Prioridad
+    );
+}
 
         public async Task<bool> AdvanceStateAsync(int id)
         {

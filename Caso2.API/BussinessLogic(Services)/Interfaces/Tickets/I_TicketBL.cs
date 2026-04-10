@@ -6,7 +6,7 @@ namespace Caso2.API.BussinessLogic_Services_.Interfaces.Tickets
     {
         Task<List<TicketDTO>> GetAllTickets();
         Task<TicketDTO?> GetTicketById(int id);
-        Task<TicketDTO> CreateTicket(TicketDTO ticket);
+        Task<TicketDTO> CreateTicket(CreateTicketDTO model);
         Task<bool> AdvanceStateAsync(int id);
     }
 }

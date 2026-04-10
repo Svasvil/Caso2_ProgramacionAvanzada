@@ -28,10 +28,13 @@ namespace Caso2.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTicket(TicketDTO model)
+        public async Task<IActionResult> CreateTicket(CreateTicketDTO model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
+          
             var result = await _ticketBL.CreateTicket(model);
+
             return Ok(result);
         }
 

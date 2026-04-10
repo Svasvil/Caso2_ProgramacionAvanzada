@@ -1,18 +1,19 @@
 ﻿using Caso2.PrograAvanzada.Services;
 using Caso2.PrograAvanzada.Services.Users;
+using Caso2.Minimal_API.Services; 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔥 MVC
 builder.Services.AddControllersWithViews();
 
-// 🔥 HttpClient para Tickets
+
+builder.Services.AddSingleton<TestService>();
+
 builder.Services.AddHttpClient<I_TicketApiCall, TicketApiCall>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7275/");
 });
 
-// 🔥 HttpClient para Users
 builder.Services.AddHttpClient<I_UserApiCall, UserApiCall>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7275/");
@@ -20,7 +21,6 @@ builder.Services.AddHttpClient<I_UserApiCall, UserApiCall>(client =>
 
 var app = builder.Build();
 
-// 🔥 Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -33,8 +33,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// 🔥 Rutas
-app.MapControllerRoute(
+ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 

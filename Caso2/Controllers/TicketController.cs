@@ -1,5 +1,6 @@
 ﻿using Caso2.PrograAvanzada.Services;
 using Caso2.PrograAvanzada.Services.Users;
+using Caso2.Minimal_API.Services; 
 using Microsoft.AspNetCore.Mvc;
 
 namespace Caso2.PrograAvanzada.Controllers
@@ -8,11 +9,13 @@ namespace Caso2.PrograAvanzada.Controllers
     {
         private readonly I_TicketApiCall _theCall;
         private readonly I_UserApiCall _usersCall;
+        private readonly TestService _prioridadService;
 
-        public TicketController(I_TicketApiCall theCall, I_UserApiCall usersCall)
+        public TicketController(I_TicketApiCall theCall, I_UserApiCall usersCall, TestService prioridadService)
         {
             _theCall = theCall;
             _usersCall = usersCall;
+            _prioridadService = prioridadService;
         }
 
         public async Task<IActionResult> Index()
@@ -29,17 +32,19 @@ namespace Caso2.PrograAvanzada.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTicket(string Nombre, string Descripcion,
-            int UserId, int Dificultad, CancellationToken cancellation)
+        public async Task<IActionResult> CreateTicket(string Nombre, string Descripcion, int UserId, int Dificultad, CancellationToken cancellation)
         {
-            if (string.IsNullOrWhiteSpace(Nombre) || string.IsNullOrWhiteSpace(Descripcion))
-                return BadRequest("Campos Requeridos");
+            
+            string prioridadCalculada = _prioridadService.ObtenerPrioridad(Descripcion);
 
+           
             var ticketCreado = await _theCall.CreateTicketAsync(
-                Nombre, Descripcion, UserId, Dificultad, cancellation);
-
-            if (ticketCreado.Dificultad > 7)
-                TempData["AltaDificultad"] = $"El ticket '{Nombre}' tiene estimación alta: {ticketCreado.Dificultad}";
+                Nombre,
+                Descripcion,
+                UserId,
+                Dificultad,
+                prioridadCalculada,
+                cancellation);
 
             return RedirectToAction(nameof(Index));
         }

@@ -23,14 +23,16 @@ namespace Caso2.PrograAvanzada.Services
                    ?? new List<TicketViewModel>();
         }
 
-        public async Task<TicketViewModel> CreateTicketAsync(string Nombre, string Descripcion, int userId, int dificultad, CancellationToken cancellation = default)
+        public async Task<TicketViewModel> CreateTicketAsync(string Nombre, string Descripcion, int userId, int dificultad, string prioridad, CancellationToken cancellation = default)
         {
+     
             var response = await _Conexion.PostAsJsonAsync("api/Ticket", new
             {
                 Nombre,
                 Descripcion,
                 UserId = userId,
-                Dificultad = dificultad
+                Dificultad = dificultad,
+                Prioridad = prioridad 
             }, cancellation);
 
             response.EnsureSuccessStatusCode();

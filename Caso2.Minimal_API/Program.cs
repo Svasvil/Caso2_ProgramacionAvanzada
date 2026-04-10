@@ -1,14 +1,19 @@
+using Caso2.Minimal_API.Services; 
+
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<TestService>();
 
 var app = builder.Build();
 
-app.UseSwagger(); // This now works with the correct using directives
+app.UseSwagger();
 app.UseSwaggerUI();
 
 var valoresDificultad = new[] { "Alta", "Media", "Baja" };
 
+//apis
 app.MapGet("/api/estimate", () =>
 {
     var random = new Random();
@@ -16,25 +21,15 @@ app.MapGet("/api/estimate", () =>
     return Results.Ok(value);
 });
 
-app.MapPost("/api/prioridad", (PriorityRequest request) =>
+app.MapPost("/api/prioridad", (PriorityRequest request, TestService service) =>
 {
-    var desc = request.Descripcion?.ToLower() ?? string.Empty;
+    var prioridad = service.ObtenerPrioridad(request.Descripcion);
 
-    bool esAlta = desc.Contains("error") ||
-                   desc.Contains("caído") ||
-                   desc.Contains("no funciona");
-    bool esMedia = desc.Contains("lento") ||
-                   desc.Contains("intermitente");
-    bool esBaja = desc.Contains("consulta") ||
-                   desc.Contains("duda");
-
-    string prioridad;
-    if (esAlta) prioridad = "Alta";
-    else if (esMedia) prioridad = "Media";
-    else if (esBaja) prioridad = "Baja";
-    else prioridad = "Media";
-
-    return Results.Ok(new { Descripcion = request.Descripcion, Prioridad = prioridad });
+    return Results.Ok(new
+    {
+        Descripcion = request.Descripcion,
+        Prioridad = prioridad
+    });
 });
 
 app.Run();
